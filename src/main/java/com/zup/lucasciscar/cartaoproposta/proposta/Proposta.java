@@ -15,6 +15,7 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
+    @Column(unique = true)
     private String documento;
     @NotBlank
     @Email
@@ -26,6 +27,9 @@ public class Proposta {
     @NotNull
     @Positive
     private BigDecimal salario;
+
+    @Deprecated
+    public Proposta() {}
 
     public Proposta(@NotBlank String documento, @NotBlank @Email String email, @NotBlank String nome,
                     @NotBlank String endereco, @NotNull @Positive BigDecimal salario) {
