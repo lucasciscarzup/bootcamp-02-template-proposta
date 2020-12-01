@@ -10,16 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class PropostaController {
@@ -69,6 +67,18 @@ public class PropostaController {
 
         URI location = builder.path("/propostas/{id}").build(proposta.getId());
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/propostas/{id}")
+    public ResponseEntity<?> buscarProposta(@PathVariable("id") Long idProposta) {
+        Optional<Proposta> propostaOpt = propostaRepository.findById(idProposta);
+        if(propostaOpt.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada");
+
+        Proposta proposta = propostaOpt.get();
+        PropostaResponse propostaResponse = new PropostaResponse(proposta);
+
+        return ResponseEntity.ok(propostaResponse);
     }
 
 }

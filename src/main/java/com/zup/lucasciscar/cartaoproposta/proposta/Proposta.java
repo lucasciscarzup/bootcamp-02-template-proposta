@@ -55,8 +55,28 @@ public class Proposta {
         return documento;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public String getNome() {
         return nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public BigDecimal getSalario() {
+        return salario;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getIdCartao() {
+        return idCartao;
     }
 
     public void setStatus(Status status) {

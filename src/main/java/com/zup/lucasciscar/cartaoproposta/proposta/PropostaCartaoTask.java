@@ -2,6 +2,7 @@ package com.zup.lucasciscar.cartaoproposta.proposta;
 
 import com.zup.lucasciscar.cartaoproposta.compartilhado.ExecutorTransacao;
 import com.zup.lucasciscar.cartaoproposta.compartilhado.client.CartaoClient;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,14 @@ public class PropostaCartaoTask {
         List<Proposta> propostasElegiveis = propostaRepository.findByStatusAndIdCartaoIsNull(Proposta.Status.ELEGIVEL);
         if(!propostasElegiveis.isEmpty()) {
             for(Proposta proposta : propostasElegiveis) {
-                Map<String, Object> resultadoCartao = cartaoClient.associarCartao(proposta.getId());
-                proposta.setIdCartao(resultadoCartao.get("id").toString());
+                try {
+                    Map<String, Object> resultadoCartao = cartaoClient.associarCartao(proposta.getId());
+                    proposta.setIdCartao(resultadoCartao.get("id").toString());
 
-                executorTransacao.atualizar(proposta);
+                    executorTransacao.atualizar(proposta);
+                } catch(FeignException ex) {
+                    // Se voar Exception não faz nada e espera a próxima iteração
+                }
             }
         }
     }
