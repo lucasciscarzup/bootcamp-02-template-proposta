@@ -1,12 +1,12 @@
 package com.zup.lucasciscar.cartaoproposta.proposta;
 
-public class PropostaAnaliseRequest {
+public class PropostaLegadoRequest {
 
     private String documento;
     private String nome;
     private Long idProposta;
 
-    public PropostaAnaliseRequest(String documento, String nome, Long idProposta) {
+    public PropostaLegadoRequest(String documento, String nome, Long idProposta) {
         this.documento = documento;
         this.nome = nome;
         this.idProposta = idProposta;

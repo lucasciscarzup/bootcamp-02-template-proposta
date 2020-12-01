@@ -29,6 +29,7 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private Status status;
+    private String idCartao;
 
     public enum Status {
         ELEGIVEL, NAO_ELEGIVEL
@@ -60,5 +61,9 @@ public class Proposta {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setIdCartao(String idCartao) {
+        this.idCartao = idCartao;
     }
 }

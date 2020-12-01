@@ -1,6 +1,6 @@
 package com.zup.lucasciscar.cartaoproposta.compartilhado.client;
 
-import com.zup.lucasciscar.cartaoproposta.proposta.PropostaAnaliseRequest;
+import com.zup.lucasciscar.cartaoproposta.proposta.PropostaLegadoRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,5 +12,5 @@ import java.util.Map;
 public interface AnaliseClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/solicitacao")
-    Map<String, Object> solicitarAnalise(@RequestBody PropostaAnaliseRequest propostaAnalise);
+    Map<String, Object> solicitarAnalise(@RequestBody PropostaLegadoRequest propostaAnalise);
 }

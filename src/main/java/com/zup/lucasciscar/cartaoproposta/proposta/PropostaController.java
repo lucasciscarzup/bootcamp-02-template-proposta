@@ -1,5 +1,7 @@
 package com.zup.lucasciscar.cartaoproposta.proposta;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zup.lucasciscar.cartaoproposta.compartilhado.ExecutorTransacao;
 import com.zup.lucasciscar.cartaoproposta.compartilhado.client.AnaliseClient;
 import com.zup.lucasciscar.cartaoproposta.compartilhado.validator.DocumentoValidator;
@@ -45,15 +47,22 @@ public class PropostaController {
         Proposta proposta = propostaRequest.toModel();
         executorTransacao.salvar(proposta);
 
-        PropostaAnaliseRequest propostaAnalise = new PropostaAnaliseRequest(proposta.getDocumento(),
+        PropostaLegadoRequest propostaAnalise = new PropostaLegadoRequest(proposta.getDocumento(),
                 proposta.getNome(), proposta.getId());
 
+        Map<String, Object> resultadoAnalise;
         try {
-            Map<String, Object> resultadoAnalise = analiseClient.solicitarAnalise(propostaAnalise);
+            resultadoAnalise = analiseClient.solicitarAnalise(propostaAnalise);
             if(resultadoAnalise.get("resultadoSolicitacao").equals("SEM_RESTRICAO"))
                 proposta.setStatus(Proposta.Status.ELEGIVEL);
         } catch(FeignException ex) {
-            proposta.setStatus(Proposta.Status.NAO_ELEGIVEL);
+            try {
+                resultadoAnalise = new ObjectMapper().readValue(ex.contentUTF8(), Map.class);
+                if(resultadoAnalise.get("resultadoSolicitacao").equals("COM_RESTRICAO"))
+                    proposta.setStatus(Proposta.Status.NAO_ELEGIVEL);
+            } catch (JsonProcessingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Servidor indisponível");
+            }
         } finally {
             executorTransacao.atualizar(proposta);
         }
