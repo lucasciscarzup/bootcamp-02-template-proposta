@@ -27,6 +27,12 @@ public class Proposta {
     @NotNull
     @Positive
     private BigDecimal salario;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public enum Status {
+        ELEGIVEL, NAO_ELEGIVEL
+    }
 
     @Deprecated
     public Proposta() {}
@@ -42,5 +48,17 @@ public class Proposta {
 
     public Long getId() {
         return id;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
