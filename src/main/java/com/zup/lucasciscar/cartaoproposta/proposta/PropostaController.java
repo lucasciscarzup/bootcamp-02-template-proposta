@@ -44,7 +44,6 @@ public class PropostaController {
 
         Proposta proposta = propostaRequest.toModel();
         executorTransacao.salvar(proposta);
-        URI location = builder.path("/propostas/{id}").build(proposta.getId());
 
         PropostaAnaliseRequest propostaAnalise = new PropostaAnaliseRequest(proposta.getDocumento(),
                 proposta.getNome(), proposta.getId());
@@ -59,6 +58,7 @@ public class PropostaController {
             executorTransacao.atualizar(proposta);
         }
 
+        URI location = builder.path("/propostas/{id}").build(proposta.getId());
         return ResponseEntity.created(location).build();
     }
 
