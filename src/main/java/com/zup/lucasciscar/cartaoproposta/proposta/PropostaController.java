@@ -53,7 +53,7 @@ public class PropostaController {
             resultadoAnalise = analiseClient.solicitarAnalise(propostaAnalise);
             if(resultadoAnalise.get("resultadoSolicitacao").equals("SEM_RESTRICAO"))
                 proposta.setStatus(Proposta.Status.ELEGIVEL);
-        } catch(FeignException ex) {
+        } catch(FeignException.FeignClientException.UnprocessableEntity ex) {
             try {
                 resultadoAnalise = new ObjectMapper().readValue(ex.contentUTF8(), Map.class);
                 if(resultadoAnalise.get("resultadoSolicitacao").equals("COM_RESTRICAO"))
