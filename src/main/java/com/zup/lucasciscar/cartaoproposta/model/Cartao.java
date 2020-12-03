@@ -24,6 +24,9 @@ public class Cartao {
     @OneToOne
     private Proposta proposta;
 
+    @Deprecated
+    public Cartao() {}
+
     public Cartao(@NotBlank String numero, @NotNull @Positive BigDecimal limite, @NotNull @Valid Proposta proposta) {
         this.numero = numero;
         this.limite = limite;

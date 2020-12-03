@@ -14,13 +14,12 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
@@ -28,8 +27,6 @@ import java.util.Optional;
 @RestController
 public class PropostaController {
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
     @Autowired
     private DocumentoValidator documentoValidator;
     @Autowired
@@ -43,18 +40,14 @@ public class PropostaController {
     }
 
     @PostMapping("/propostas")
+    @Transactional
     public ResponseEntity<?> criarProposta(@RequestBody @Valid PropostaRequest propostaRequest,
                                            UriComponentsBuilder builder) {
         if(propostaRepository.findByDocumento(propostaRequest.getDocumento()).isPresent())
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "CPF/CNPJ já cadastrado");
 
         Proposta proposta = propostaRequest.toModel();
-
-        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-        transactionTemplate.execute(status -> {
-            propostaRepository.save(proposta);
-            return true;
-        });
+        propostaRepository.save(proposta);
 
         PropostaAnaliseRequest propostaAnaliseRequest = new PropostaAnaliseRequest(proposta.getDocumento(),
                 proposta.getNome(), proposta.getId());
@@ -73,10 +66,7 @@ public class PropostaController {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Servidor indisponível");
             }
         } finally {
-            transactionTemplate.execute(status -> {
-                propostaRepository.save(proposta);
-                return true;
-            });
+            propostaRepository.save(proposta);
         }
 
         URI location = builder.path("/propostas/{id}").build(proposta.getId());
@@ -86,11 +76,10 @@ public class PropostaController {
     @GetMapping("/propostas/{id}")
     public ResponseEntity<?> buscarProposta(@PathVariable("id") Long idProposta) {
         Optional<Proposta> propostaOpt = propostaRepository.findById(idProposta);
-
         Proposta proposta = propostaOpt.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada"));
-        PropostaResponse propostaResponse = new PropostaResponse(proposta);
 
+        PropostaResponse propostaResponse = new PropostaResponse(proposta);
         return ResponseEntity.ok(propostaResponse);
     }
 

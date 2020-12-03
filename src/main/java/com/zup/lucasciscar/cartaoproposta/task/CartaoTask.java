@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
@@ -28,6 +29,7 @@ public class CartaoTask {
     private CartaoClient cartaoClient;
 
     @Scheduled(fixedDelayString = "${periodicidade.cartao-task}")
+    @Transactional
     private void criarCartao() {
         List<Proposta> propostasElegiveis = propostaRepository.findByStatusAndNumeroCartaoIsNull(Proposta.Status.ELEGIVEL);
         if(!propostasElegiveis.isEmpty()) {
