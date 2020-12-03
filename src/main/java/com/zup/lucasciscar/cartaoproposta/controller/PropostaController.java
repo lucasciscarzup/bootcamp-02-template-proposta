@@ -23,8 +23,10 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/v1")
 public class PropostaController {
 
     @Autowired
@@ -74,8 +76,8 @@ public class PropostaController {
     }
 
     @GetMapping("/propostas/{id}")
-    public ResponseEntity<?> buscarProposta(@PathVariable("id") Long idProposta) {
-        Optional<Proposta> propostaOpt = propostaRepository.findById(idProposta);
+    public ResponseEntity<?> buscarProposta(@PathVariable("id") UUID id) {
+        Optional<Proposta> propostaOpt = propostaRepository.findById(id);
         Proposta proposta = propostaOpt.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada"));
 

@@ -3,14 +3,15 @@ package com.zup.lucasciscar.cartaoproposta.model;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "biometrias")
 public class Biometria {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
     @NotNull
     @Lob
     private byte[] digital;
@@ -27,7 +28,7 @@ public class Biometria {
         this.cartao = cartao;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 }

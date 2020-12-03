@@ -1,16 +1,17 @@
 package com.zup.lucasciscar.cartaoproposta.dto.response;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class CartaoClientResponse {
 
     private String id;
     private BigDecimal limite;
-    private Long idProposta;
+    private UUID idProposta;
 
     public CartaoClientResponse() {}
 
-    public CartaoClientResponse(String id, BigDecimal limite, Long idProposta) {
+    public CartaoClientResponse(String id, BigDecimal limite, UUID idProposta) {
         this.id = id;
         this.limite = limite;
         this.idProposta = idProposta;
@@ -24,7 +25,7 @@ public class CartaoClientResponse {
         return limite;
     }
 
-    public Long getIdProposta() {
+    public UUID getIdProposta() {
         return idProposta;
     }
 }

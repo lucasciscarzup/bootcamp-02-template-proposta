@@ -1,12 +1,14 @@
 package com.zup.lucasciscar.cartaoproposta.dto.request;
 
+import java.util.UUID;
+
 public class PropostaAnaliseRequest {
 
     private String documento;
     private String nome;
-    private Long idProposta;
+    private UUID idProposta;
 
-    public PropostaAnaliseRequest(String documento, String nome, Long idProposta) {
+    public PropostaAnaliseRequest(String documento, String nome, UUID idProposta) {
         this.documento = documento;
         this.nome = nome;
         this.idProposta = idProposta;
@@ -20,7 +22,7 @@ public class PropostaAnaliseRequest {
         return nome;
     }
 
-    public Long getIdProposta() {
+    public UUID getIdProposta() {
         return idProposta;
     }
 }
