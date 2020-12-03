@@ -1,7 +1,7 @@
-package com.zup.lucasciscar.cartaoproposta.compartilhado.validator;
+package com.zup.lucasciscar.cartaoproposta.validator;
 
-import com.zup.lucasciscar.cartaoproposta.proposta.PropostaRepository;
-import com.zup.lucasciscar.cartaoproposta.proposta.PropostaRequest;
+import com.zup.lucasciscar.cartaoproposta.repository.PropostaRepository;
+import com.zup.lucasciscar.cartaoproposta.dto.request.PropostaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

@@ -1,4 +1,4 @@
-package com.zup.lucasciscar.cartaoproposta.compartilhado.advice;
+package com.zup.lucasciscar.cartaoproposta.advice;
 
 import java.util.Arrays;
 import java.util.List;

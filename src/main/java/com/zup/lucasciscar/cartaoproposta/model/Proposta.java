@@ -1,4 +1,4 @@
-package com.zup.lucasciscar.cartaoproposta.proposta;
+package com.zup.lucasciscar.cartaoproposta.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -29,7 +29,7 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private String idCartao;
+    private String numeroCartao;
 
     public enum Status {
         ELEGIVEL, NAO_ELEGIVEL
@@ -75,15 +75,15 @@ public class Proposta {
         return status;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public String getNumeroCartao() {
+        return numeroCartao;
     }
 
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    public void setIdCartao(String idCartao) {
-        this.idCartao = idCartao;
+    public void setNumeroCartao(String numeroCartao) {
+        this.numeroCartao = numeroCartao;
     }
 }

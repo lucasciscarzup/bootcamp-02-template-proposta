@@ -1,14 +1,21 @@
-package com.zup.lucasciscar.cartaoproposta.proposta;
+package com.zup.lucasciscar.cartaoproposta.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zup.lucasciscar.cartaoproposta.compartilhado.ExecutorTransacao;
-import com.zup.lucasciscar.cartaoproposta.compartilhado.client.AnaliseClient;
-import com.zup.lucasciscar.cartaoproposta.compartilhado.validator.DocumentoValidator;
+import com.zup.lucasciscar.cartaoproposta.client.AnaliseClient;
+import com.zup.lucasciscar.cartaoproposta.dto.request.PropostaAnaliseRequest;
+import com.zup.lucasciscar.cartaoproposta.dto.request.PropostaRequest;
+import com.zup.lucasciscar.cartaoproposta.dto.response.PropostaAnaliseResponse;
+import com.zup.lucasciscar.cartaoproposta.dto.response.PropostaResponse;
+import com.zup.lucasciscar.cartaoproposta.model.Proposta;
+import com.zup.lucasciscar.cartaoproposta.repository.PropostaRepository;
+import com.zup.lucasciscar.cartaoproposta.validator.DocumentoValidator;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,14 +23,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 public class PropostaController {
 
     @Autowired
-    private ExecutorTransacao executorTransacao;
+    private PlatformTransactionManager transactionManager;
     @Autowired
     private DocumentoValidator documentoValidator;
     @Autowired
@@ -43,26 +49,34 @@ public class PropostaController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "CPF/CNPJ já cadastrado");
 
         Proposta proposta = propostaRequest.toModel();
-        executorTransacao.salvar(proposta);
 
-        PropostaLegadoRequest propostaAnalise = new PropostaLegadoRequest(proposta.getDocumento(),
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.execute(status -> {
+            propostaRepository.save(proposta);
+            return true;
+        });
+
+        PropostaAnaliseRequest propostaAnaliseRequest = new PropostaAnaliseRequest(proposta.getDocumento(),
                 proposta.getNome(), proposta.getId());
 
-        Map<String, Object> resultadoAnalise;
+        PropostaAnaliseResponse propostaAnaliseResponse;
         try {
-            resultadoAnalise = analiseClient.solicitarAnalise(propostaAnalise);
-            if(resultadoAnalise.get("resultadoSolicitacao").equals("SEM_RESTRICAO"))
+            propostaAnaliseResponse = analiseClient.solicitarAnalise(propostaAnaliseRequest);
+            if(propostaAnaliseResponse.getResultadoSolicitacao().equals(PropostaAnaliseResponse.Restricao.SEM_RESTRICAO))
                 proposta.setStatus(Proposta.Status.ELEGIVEL);
         } catch(FeignException.FeignClientException.UnprocessableEntity ex) {
             try {
-                resultadoAnalise = new ObjectMapper().readValue(ex.contentUTF8(), Map.class);
-                if(resultadoAnalise.get("resultadoSolicitacao").equals("COM_RESTRICAO"))
+                propostaAnaliseResponse = new ObjectMapper().readValue(ex.contentUTF8(), PropostaAnaliseResponse.class);
+                if(propostaAnaliseResponse.getResultadoSolicitacao().equals(PropostaAnaliseResponse.Restricao.COM_RESTRICAO))
                     proposta.setStatus(Proposta.Status.NAO_ELEGIVEL);
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Servidor indisponível");
             }
         } finally {
-            executorTransacao.atualizar(proposta);
+            transactionTemplate.execute(status -> {
+                propostaRepository.save(proposta);
+                return true;
+            });
         }
 
         URI location = builder.path("/propostas/{id}").build(proposta.getId());
@@ -72,10 +86,9 @@ public class PropostaController {
     @GetMapping("/propostas/{id}")
     public ResponseEntity<?> buscarProposta(@PathVariable("id") Long idProposta) {
         Optional<Proposta> propostaOpt = propostaRepository.findById(idProposta);
-        if(propostaOpt.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada");
 
-        Proposta proposta = propostaOpt.get();
+        Proposta proposta = propostaOpt.orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada"));
         PropostaResponse propostaResponse = new PropostaResponse(proposta);
 
         return ResponseEntity.ok(propostaResponse);

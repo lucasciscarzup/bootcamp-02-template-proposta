@@ -1,4 +1,6 @@
-package com.zup.lucasciscar.cartaoproposta.proposta;
+package com.zup.lucasciscar.cartaoproposta.dto.response;
+
+import com.zup.lucasciscar.cartaoproposta.model.Proposta;
 
 import java.math.BigDecimal;
 
@@ -10,7 +12,7 @@ public class PropostaResponse {
     private String endereco;
     private BigDecimal salario;
     private Proposta.Status status;
-    private String idCartao;
+    private String numeroCartao;
 
     public PropostaResponse(Proposta proposta) {
         this.documento = proposta.getDocumento();
@@ -19,7 +21,7 @@ public class PropostaResponse {
         this.endereco = proposta.getEndereco();
         this.salario = proposta.getSalario();
         this.status = proposta.getStatus();
-        this.idCartao = proposta.getIdCartao();
+        this.numeroCartao = proposta.getNumeroCartao();
     }
 
     public String getDocumento() {
@@ -46,7 +48,7 @@ public class PropostaResponse {
         return status;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public String getNumeroCartao() {
+        return numeroCartao;
     }
 }

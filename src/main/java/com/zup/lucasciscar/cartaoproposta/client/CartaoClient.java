@@ -1,16 +1,15 @@
-package com.zup.lucasciscar.cartaoproposta.compartilhado.client;
+package com.zup.lucasciscar.cartaoproposta.client;
 
+import com.zup.lucasciscar.cartaoproposta.dto.response.CartaoClientResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Map;
-
 @FeignClient(value = "cartao", url = "${cartao-client.url}")
 public interface CartaoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/cartoes?idProposta={idProposta}")
-    Map<String, Object> associarCartao(@PathVariable("idProposta") Long idProposta);
+    CartaoClientResponse associarCartao(@PathVariable("idProposta") Long idProposta);
 }
 

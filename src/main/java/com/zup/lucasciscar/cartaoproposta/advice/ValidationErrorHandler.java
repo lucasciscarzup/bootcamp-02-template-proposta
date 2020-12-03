@@ -1,4 +1,4 @@
-package com.zup.lucasciscar.cartaoproposta.compartilhado.advice;
+package com.zup.lucasciscar.cartaoproposta.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

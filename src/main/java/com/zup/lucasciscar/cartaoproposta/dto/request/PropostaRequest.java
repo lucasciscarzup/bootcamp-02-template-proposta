@@ -1,5 +1,6 @@
-package com.zup.lucasciscar.cartaoproposta.proposta;
+package com.zup.lucasciscar.cartaoproposta.dto.request;
 
+import com.zup.lucasciscar.cartaoproposta.model.Proposta;
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CNPJValidator;
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 
