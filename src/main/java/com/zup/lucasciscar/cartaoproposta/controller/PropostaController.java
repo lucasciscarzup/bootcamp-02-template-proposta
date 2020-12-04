@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1")
 public class PropostaController {
 
     @Autowired
