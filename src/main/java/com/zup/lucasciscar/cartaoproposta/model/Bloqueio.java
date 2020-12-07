@@ -33,4 +33,8 @@ public class Bloqueio {
         this.userAgent = userAgent;
         this.cartao = cartao;
     }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
 }

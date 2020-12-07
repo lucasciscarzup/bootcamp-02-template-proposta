@@ -20,10 +20,16 @@ public class Cartao {
     @NotNull
     @Positive
     private BigDecimal limite;
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.DESBLOQUEADO;
     @NotNull
     @Valid
     @OneToOne
     private Proposta proposta;
+
+    public enum Status {
+        BLOQUEADO, DESBLOQUEADO;
+    }
 
     @Deprecated
     public Cartao() {}
@@ -40,5 +46,9 @@ public class Cartao {
 
     public BigDecimal getLimite() {
         return limite;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
