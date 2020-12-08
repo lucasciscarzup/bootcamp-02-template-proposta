@@ -30,7 +30,7 @@ public class CartaoTask {
 
     @Scheduled(fixedDelayString = "${periodicidade.cartao-task}")
     @Transactional
-    private void criarCartao() {
+    protected void criarCartao() {
         List<Proposta> propostasElegiveis = propostaRepository.findByStatusAndNumeroCartaoIsNull(Proposta.Status.ELEGIVEL);
         if(!propostasElegiveis.isEmpty()) {
             for(Proposta proposta : propostasElegiveis) {
