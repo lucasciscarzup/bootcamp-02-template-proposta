@@ -1,6 +1,7 @@
 package com.zup.lucasciscar.cartaoproposta.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zup.lucasciscar.cartaoproposta.model.Cartao;
 import com.zup.lucasciscar.cartaoproposta.model.Viagem;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class ViagemRequest {
         return dataTermino;
     }
 
-    public Viagem toModel(HttpServletRequest request) {
-        return new Viagem(destino, dataTermino, request.getRemoteAddr(), request.getHeader("User-Agent"));
+    public Viagem toModel(HttpServletRequest request, Cartao cartao) {
+        return new Viagem(destino, dataTermino, request.getRemoteAddr(), request.getHeader("User-Agent"), cartao);
     }
 }

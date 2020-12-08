@@ -40,6 +40,10 @@ public class Cartao {
         this.proposta = proposta;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public String getNumero() {
         return numero;
     }

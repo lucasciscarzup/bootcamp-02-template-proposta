@@ -46,7 +46,7 @@ public class ViagemController {
         try {
             ViagemClientResponse viagemClientResponse = cartaoClient.criarAvisoViagemCartao(cartao.getNumero(), viagemClientRequest);
             if(viagemClientResponse.getResultado().equals(ViagemClientResponse.Resultado.CRIADO)) {
-                Viagem viagem = viagemRequest.toModel(request);
+                Viagem viagem = viagemRequest.toModel(request, cartao);
                 viagemRepository.save(viagem);
             }
         } catch(FeignException ex) {

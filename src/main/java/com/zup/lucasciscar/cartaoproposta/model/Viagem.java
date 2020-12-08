@@ -2,10 +2,8 @@ package com.zup.lucasciscar.cartaoproposta.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -34,15 +32,20 @@ public class Viagem {
     private String ipCliente;
     @NotBlank
     private String userAgent;
+    @NotNull
+    @Valid
+    @ManyToOne
+    private Cartao cartao;
 
     @Deprecated
     public Viagem() {}
 
     public Viagem(@NotBlank String destino, @NotNull @Future LocalDate dataTermino, @NotBlank String ipCliente,
-                  @NotBlank String userAgent) {
+                  @NotBlank String userAgent, @NotNull @Valid Cartao cartao) {
         this.destino = destino;
         this.dataTermino = dataTermino;
         this.ipCliente = ipCliente;
         this.userAgent = userAgent;
+        this.cartao = cartao;
     }
 }
