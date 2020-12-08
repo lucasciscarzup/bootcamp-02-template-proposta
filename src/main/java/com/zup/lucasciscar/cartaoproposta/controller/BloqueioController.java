@@ -31,7 +31,7 @@ public class BloqueioController {
     @Autowired
     private CartaoClient cartaoClient;
 
-    @PostMapping("/cartoes/{idCartao}/bloqueio")
+    @PostMapping("/cartoes/{idCartao}/bloqueios")
     @Transactional
     public ResponseEntity<?> bloquearCartao(@PathVariable("idCartao") UUID idCartao, HttpServletRequest request) {
         Optional<Cartao> cartaoOpt = cartaoRepository.findById(idCartao);
