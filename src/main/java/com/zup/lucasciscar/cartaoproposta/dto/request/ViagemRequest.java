@@ -26,6 +26,14 @@ public class ViagemRequest {
         this.dataTermino = dataTermino;
     }
 
+    public String getDestino() {
+        return destino;
+    }
+
+    public LocalDate getDataTermino() {
+        return dataTermino;
+    }
+
     public Viagem toModel(HttpServletRequest request) {
         return new Viagem(destino, dataTermino, request.getRemoteAddr(), request.getHeader("User-Agent"));
     }

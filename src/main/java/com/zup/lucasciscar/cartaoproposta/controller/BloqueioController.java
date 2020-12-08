@@ -1,6 +1,8 @@
 package com.zup.lucasciscar.cartaoproposta.controller;
 
 import com.zup.lucasciscar.cartaoproposta.client.CartaoClient;
+import com.zup.lucasciscar.cartaoproposta.dto.request.BloqueioClientRequest;
+import com.zup.lucasciscar.cartaoproposta.dto.response.BloqueioClientResponse;
 import com.zup.lucasciscar.cartaoproposta.model.Bloqueio;
 import com.zup.lucasciscar.cartaoproposta.model.Cartao;
 import com.zup.lucasciscar.cartaoproposta.repository.BloqueioRepository;
@@ -44,14 +46,13 @@ public class BloqueioController {
         Bloqueio bloqueio = new Bloqueio(request.getRemoteAddr(), request.getHeader("User-Agent"), cartao);
         bloqueioRepository.save(bloqueio);
 
-        Map<String, Object> bodyMap = new HashMap<>();
-        bodyMap.put("sistemaResponsavel", bloqueio.getUserAgent());
-
+        BloqueioClientRequest bloqueioClientRequest = new BloqueioClientRequest(bloqueio);
         try {
-            String resultado = cartaoClient.bloquearCartao(cartao.getNumero(), bodyMap);
-            if(Cartao.Status.BLOQUEADO.equals(resultado))
+            BloqueioClientResponse bloqueioClientResponse = cartaoClient.bloquearCartao(cartao.getNumero(), bloqueioClientRequest);
+            if(bloqueioClientResponse.getResultado().equals(BloqueioClientResponse.Resultado.BLOQUEADO)) {
                 cartao.setStatus(Cartao.Status.BLOQUEADO);
-            cartaoRepository.save(cartao);
+                cartaoRepository.save(cartao);
+            }
         } catch(FeignException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Servidor indisponível");
         }
