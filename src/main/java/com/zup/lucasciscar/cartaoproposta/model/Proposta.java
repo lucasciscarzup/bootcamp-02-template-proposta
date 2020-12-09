@@ -1,5 +1,7 @@
 package com.zup.lucasciscar.cartaoproposta.model;
 
+import com.zup.lucasciscar.cartaoproposta.converter.StringAttributeConverter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ public class Proposta {
     @GeneratedValue
     private UUID id;
     @NotBlank
+    @Convert(converter = StringAttributeConverter.class)
     @Column(unique = true)
     private String documento;
     @NotBlank
