@@ -1,7 +1,5 @@
 package com.zup.lucasciscar.cartaoproposta.dto.request;
 
-import com.zup.lucasciscar.cartaoproposta.model.Viagem;
-
 import java.time.LocalDate;
 
 public class ViagemClientRequest {

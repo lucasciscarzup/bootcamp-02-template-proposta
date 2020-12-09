@@ -1,13 +1,10 @@
 package com.zup.lucasciscar.cartaoproposta.converter;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.AttributeConverter;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.util.Base64;
 
