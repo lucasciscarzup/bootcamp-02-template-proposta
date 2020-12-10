@@ -46,18 +46,6 @@ services:
       POSTGRES_DB: proposta
       POSTGRES_HOST: pg-proposta
 
-  pg-transacao:
-    image: 'postgres:alpine'
-    volumes:
-      - pg-transacao-volume:/var/lib/postgresql/data
-    ports:
-      - 5434:5432
-    environment:
-      POSTGRES_USER: transacao
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: transacao
-      POSTGRES_HOST: pg-transacao
-
   keycloak:
     image: jboss/keycloak
     ports:
@@ -164,4 +152,3 @@ volumes:
   prometheus-volume:
   postgres-volume:
   pg-proposta-volume:
-  pg-transacao-volume:
